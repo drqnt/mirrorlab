@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>MirrorLab Latency Test</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #05070b; color: white; }
+    body.flash { background: white; color: black; }
+    main { height: 100%; display: grid; place-items: center; padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)); }
+    .stack { width: min(760px, 100%); text-align: center; }
+    h1 { font-size: clamp(28px, 7vw, 58px); margin: 0 0 12px; }
+    #clock { font: 700 clamp(42px, 13vw, 110px)/1 ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+    #frame { margin-top: 10px; opacity: .68; font: 500 clamp(16px, 4vw, 28px)/1.2 ui-monospace, monospace; }
+    p { opacity: .72; line-height: 1.45; }
+    button { border: 0; border-radius: 16px; padding: 17px 28px; font-size: 19px; font-weight: 650; background: #38bdf8; color: #001018; }
+    .running button { background: #fb7185; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="stack" id="stack">
+      <h1>MirrorLab latency test</h1>
+      <div id="clock">0.000</div>
+      <div id="frame">frame 000000</div>
+      <p>Каждые две секунды экран даёт белую вспышку и короткий щелчок в один программный момент.</p>
+      <button id="toggle">Запустить тест</button>
+    </div>
+  </main>
+  <script>
+    const clock = document.querySelector('#clock');
+    const frameLabel = document.querySelector('#frame');
+    const toggle = document.querySelector('#toggle');
+    const stack = document.querySelector('#stack');
+    let context;
+    let running = false;
+    let frame = 0;
+    let start = performance.now();
+    let interval;
+
+    function draw(now) {
+      const elapsed = (now - start) / 1000;
+      clock.textContent = elapsed.toFixed(3);
+      frameLabel.textContent = `frame ${String(frame++).padStart(6, '0')}`;
+      requestAnimationFrame(draw);
+    }
+
+    function clickAndFlash() {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.frequency.value = 1200;
+      gain.gain.setValueAtTime(0.7, context.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.035);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start();
+      oscillator.stop(context.currentTime + 0.04);
+      document.body.classList.add('flash');
+      setTimeout(() => document.body.classList.remove('flash'), 50);
+    }
+
+    toggle.addEventListener('click', async () => {
+      context ??= new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+      await context.resume();
+      running = !running;
+      stack.classList.toggle('running', running);
+      toggle.textContent = running ? 'Остановить тест' : 'Запустить тест';
+      clearInterval(interval);
+      if (running) {
+        clickAndFlash();
+        interval = setInterval(clickAndFlash, 2000);
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      }
+    });
+
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>

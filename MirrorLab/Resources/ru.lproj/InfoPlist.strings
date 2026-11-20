@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "MirrorLab";
+"NSCameraUsageDescription" = "macOS относит проводной экран iPhone/iPad к категории «Камера». MirrorLab использует только экран подключённого iPhone/iPad и не открывает встроенную камеру Mac.";
+"NSMicrophoneUsageDescription" = "MirrorLab принимает системный звук подключённого iPhone или iPad.";
+"NSLocalNetworkUsageDescription" = "MirrorLab принимает AirPlay-зеркалирование с iPhone и iPad в локальной сети.";

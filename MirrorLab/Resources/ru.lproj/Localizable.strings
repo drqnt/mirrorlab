@@ -1,0 +1,2 @@
+/* MirrorLab UI is authored in Russian. The presence of this localization makes
+   Russian the bundle language as well, so AppKit supplies Russian standard menus. */

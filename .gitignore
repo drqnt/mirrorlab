@@ -1,0 +1,11 @@
+.DS_Store
+.build/
+DerivedData/
+xcuserdata/
+MirrorLab/Resources/Binaries/uxplay
+MirrorLab-build-errors.txt
+MirrorLab-xcodebuild.log
+*.xcuserstate
+build/
+*.app
+DIST/

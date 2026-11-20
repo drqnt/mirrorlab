@@ -1,0 +1,3 @@
+MirrorLab 0.3.48 Beta Release Builder
+
+The corrected 0.3.47 Release builder is retained. It ignores otool's local-path header and validates only real runtime dependencies. 0.3.48 adds only the MirrorLab-local volume UX/audio gain feature; the standalone Release packaging flow is otherwise unchanged.

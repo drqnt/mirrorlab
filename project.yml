@@ -1,0 +1,29 @@
+name: MirrorLab
+options:
+  developmentLanguage: ru
+  bundleIdPrefix: ua.vovaburiak
+  deploymentTarget:
+    macOS: "14.0"
+targets:
+  MirrorLab:
+    type: application
+    platform: macOS
+    sources:
+      - path: MirrorLab
+        excludes:
+          - Info.plist
+          - Resources
+    resources:
+      - path: MirrorLab/Resources
+    info:
+      path: MirrorLab/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ua.vovaburiak.MirrorLab
+        PRODUCT_NAME: MirrorLab
+        MARKETING_VERSION: "0.3.50"
+        CURRENT_PROJECT_VERSION: "60"
+        SWIFT_VERSION: "5.0"
+        ENABLE_HARDENED_RUNTIME: NO
+        ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_STYLE: Automatic
